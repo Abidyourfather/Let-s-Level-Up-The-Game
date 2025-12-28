@@ -59,6 +59,61 @@ all_sprites = pygame.sprite.Group()
 # Creating first sprite (black rectangle)
 sprite1 = Sprite(pygame.Color("black"), 30, 30) # 30x30 red rectangle
 # Set random intial position within screen bounds
-sprite1.rect.x, sprite1.rect.y = random(0, SCREEN_WIDTH - sprite1.rect.width),random.randint(0,SCREEN_HEIGHT - sprite1.rect.height)
+sprite1.rect.x, sprite1.rect.y = random.randint(0, SCREEN_WIDTH - sprite1.rect.width),random.randint(0,SCREEN_HEIGHT - sprite1.rect.height)
+
+
+# Creating first sprite (black rectangle)
+sprite2 = Sprite(pygame.Color("red"), 20, 20) # 20x20 red rectangle
+# Set random intial position within screen bounds
+sprite2.rect.x, sprite2.rect.y = random.randint(0, SCREEN_WIDTH - sprite2.rect.width),random.randint(0,SCREEN_HEIGHT - sprite2.rect.height)
+all_sprites.add(sprite2)  # Add to sprite group
+
+
+
+
+
 
 all_sprites.add(sprite1) #Add to sprite group
+# Game Loop Control Variables
+running = True # Controls whether the game is running
+won = False # Tracks whether the player has won
+clock = pygame.time.Clock() # Add to sprite group
+
+
+# Main game loop
+
+while running:
+    # Event handling - check for user input
+    for event in pygame.event.get():
+        # Check for window close or 'x' key press to quit
+        if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_x):
+            running = False # EXIT THE GAME LOOP 
+
+    # Game logic - only process if player hasn't won yet 
+    if not won:
+        # Get keyboard state for continuous movement 
+        keys = pygame.key.get_pressed()
+
+        # Calculate movement in X direction:
+        # Right arrow adds MOVEMENT SPEED, Left arrow subtracts MOVEMENT SPEED
+        x_change = (keys[pygame.K_RIGHT] - keys [pygame.K_LEFT]) * MOVEMENT_SPEED
+
+        # Calculate movement in y direction:
+        # Down arrow adds MOVEMENT SPEED, up arrow subtracts MOVEMENT SPEED
+        y_change = (keys[pygame.K_DOWN] - keys [pygame.K_UP]) * MOVEMENT_SPEED
+
+        # Move the player-controlled sprite (sprite1)
+        sprite1.move(x_change, y_change)
+
+        # CHECK FOR COLLOSION BETWEEN SP1 AND SP2
+        if sprite1.rect.collidedict(sprite2.rect):
+            all_sprites.remove(sprite2) # Remove the red sprite
+            won = True # Set win state to True
+
+    # Update the display - this makes all our draws visible
+    pygame.display.flip()
+    # Cap the frame rate at 90 frames per second
+    clock. tick(90)
+
+    # Clean up Pygame when the game loop ends
+    pygame.quit()
